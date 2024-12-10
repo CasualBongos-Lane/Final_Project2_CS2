@@ -8,7 +8,7 @@ class Gui:
         self.tv_logic = TvLogic()
 
         self.frame1 = Frame(self.window)
-        self.volume_slider = Scale(self.frame1, from_=0, to=5, orient='horizontal', state='disabled')
+        self.volume_slider = Scale(self.frame1, from_=0, to=5, orient='horizontal', state='disabled', command=self.check_volume)
         self.label_volume = Label(self.frame1, text='Volume Slider', font=('Helvetica', 20))
         self.channel_slider = Scale(self.frame1, from_=1, to=3, orient='horizontal', state='disabled', command=self.change_channel)
         self.label_channel = Label(self.frame1, text='Channel Slider', font=('Helvetica', 20))
@@ -68,44 +68,66 @@ class Gui:
             self.photo.config(file='BG.png')
 
     def mute(self) -> None:
+        """
+        Calls the Mute function in Logic
+        """
         muted = self.tv_logic.mute()
         if muted:
             self.volume_slider.set(0)
-        else:
-            self.check_volume()
 
     def channel_up(self) -> None:
+        """
+        Calls the channel_up function in Logic
+        """
         new_channel = self.tv_logic.channel_up()
         self.channel_slider.set(new_channel)
         self.check_channel()
 
     def channel_down(self) -> None:
+        """
+        Calls the channel_down function in Logic
+        """
         new_channel = self.tv_logic.channel_down()
         self.channel_slider.set(new_channel)
         self.check_channel()
 
     def volume_up(self) -> None:
+        """
+        Calls the volume_up function in Logic
+        """
         slider_volume = self.volume_slider.get()
-        new_volume = int(slider_volume)
+        new_volume = int(slider_volume) #Changes value to int
         new_volume = self.tv_logic.volume_up(new_volume)
         self.volume_slider.set(new_volume)
 
     def volume_down(self) -> None:
+        """
+        Calls the volume_down function in Logic
+        """
         slider_volume = self.volume_slider.get()
-        new_volume = int(slider_volume)
+        new_volume = int(slider_volume) #Changes value to int
         new_volume = self.tv_logic.volume_down(new_volume)
         self.volume_slider.set(new_volume)
 
-    def change_channel(self, val):
-        new_channel = int(val)
+    def change_channel(self, val) -> None:
+        """
+        Calls the Change channel function in Logic
+        :param val: This parameter is needed to determine the correct value of the channel slider
+        """
+        new_channel = int(val) #Changes value to int
         self.tv_logic.change_channel(new_channel)
         self.check_channel()
 
-    def check_channel(self):
+    def check_channel(self) -> None:
+        """
+        This calls the check_channel function from logic which determines the correct image to display
+        """
         image_file = self.tv_logic.check_channel()
         self.photo.config(file=image_file)
 
-    def check_volume(self):
-        slider_volume = self.volume_slider.get()
-        new_volume = int(slider_volume)
+    def check_volume(self, val) -> None:
+        """
+        checks the value of slider_volume and setting the volume variable in Logic to it if the tv is unmuted
+        """
+        new_volume = int(val) #Changes value to int
         self.tv_logic.get_volume(new_volume)
